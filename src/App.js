@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Login from './pages/Login';
 import Search from './pages/Search';
 import Album from './pages/Album';
@@ -14,13 +14,15 @@ class App extends React.Component {
       <BrowserRouter>
         <p>TrybeTunes</p>
         <div>
-          <Login />
-          <Search />
-          <Album />
-          <Favorites />
-          <Profile />
-          <ProfileEdit />
-          <NotFound />
+          <Switch>
+            <Route path="/" exact component={ Login } />
+            <Route path="/search" component={ Search } />
+            <Route path="/album" component={ Album } />
+            <Route path="/favorites" component={ Favorites } />
+            <Route path="/profile/edit" component={ ProfileEdit } />
+            <Route path="/profile" component={ Profile } />
+            <Route path="*" component={ NotFound } />
+          </Switch>
         </div>
       </BrowserRouter>
     );
@@ -28,4 +30,3 @@ class App extends React.Component {
 }
 
 export default App;
-// Inicio;
