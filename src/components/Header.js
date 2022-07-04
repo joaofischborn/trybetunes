@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import LoadingMessage from '../pages/LoadingMessage';
 import { getUser } from '../services/userAPI';
 
@@ -27,8 +28,13 @@ class Header extends React.Component {
       const { loading, name } = this.state;
       return (
         <header data-testid="header-component">
-          <p>{ loading ? <LoadingMessage /> : null }</p>
-          <h2 data-testid="header-user-name">{ name }</h2>
+          <div>
+            <span>{ loading ? <LoadingMessage /> : null }</span>
+            <h2 data-testid="header-user-name">{ name }</h2>
+            <Link data-testid="link-to-search" to="/search"> Pesquisar </Link>
+            <Link data-testid="link-to-favorites" to="/favorites"> Favoritas </Link>
+            <Link data-testid="link-to-profile" to="/profile"> Perfil </Link>
+          </div>
         </header>
       );
     }
