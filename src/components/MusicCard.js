@@ -1,6 +1,6 @@
 import React from 'react';
 import propTypes from 'prop-types';
-import { addSong } from '../services/favoriteSongsAPI';
+import { addSong, getFavoriteSongs, removeSong } from '../services/favoriteSongsAPI';
 import LoadingMessage from '../pages/LoadingMessage';
 
 class MusicCard extends React.Component {
@@ -9,19 +9,42 @@ class MusicCard extends React.Component {
 
     this.state = {
       loading: false,
+      favoriteMusic: false,
     };
   }
 
-  favoriteMusic = async () => {
+  componentDidMount() {
+    this.getFavorite();
+  }
+
+  getFavorite = async () => {
     const { songs } = this.props;
-    this.setState({ loading: true });
-    await addSong(songs);
-    this.setState({ loading: false });
+    const favoriteMusics = await getFavoriteSongs();
+    const favoriteMusic = favoriteMusics.some((song) => song.trackName
+    === songs.trackName);
+
+    if (favoriteMusic) {
+      this.setState({ favoriteMusic: true });
+    }
+  }
+
+  favoriteMusic = async () => {
+    const { favoriteMusic } = this.state;
+    const { songs } = this.props;
+    if (favoriteMusic === false) {
+      this.setState({ loading: true });
+      await addSong(songs);
+      this.setState({ loading: false, favoriteMusic: true });
+    } else {
+      this.setState({ loading: true });
+      await removeSong(songs);
+      this.setState({ loading: false, favoriteMusic: false });
+    }
   }
 
   render() {
     const { trackName, previewUrl, trackId } = this.props;
-    const { loading } = this.state;
+    const { loading, favoriteMusic } = this.state;
     return (
       <div>
         <p>{trackName}</p>
@@ -42,6 +65,7 @@ class MusicCard extends React.Component {
             type="checkbox"
             onChange={ this.favoriteMusic }
             id={ `checkbox-music-${trackId}` }
+            checked={ favoriteMusic }
           />
         </label>
         { loading && <LoadingMessage /> }
